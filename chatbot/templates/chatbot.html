@@ -1,176 +1,157 @@
+{% extends "base.html" %}
 {% load static chat_extras %}
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PromptLab | Prompt Architect</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <script src="{% static 'js/chat.js' %}" defer></script>
-  </head>
-  <body>
-    <div class="page-orbit page-orbit-left" aria-hidden="true"></div>
-    <div class="page-orbit page-orbit-right" aria-hidden="true"></div>
 
-    <nav class="navbar">
-      <div class="navbar-inner">
-        <a class="brand" href="{% url 'chatbot:home' %}">
-          <span class="brand-logo" aria-hidden="true">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M13 2L4.5 13.5H11L10 22L20.5 10.5H14L13 2Z"
-                fill="currentColor"
-              />
-            </svg>
-          </span>
-          <span class="brand-name">Prompt<span>Lab</span></span>
-        </a>
+{% block title %}PromptLab | Chats{% endblock %}
 
-        <div class="nav-status">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span>Modo Prompt Architect</span>
-        </div>
-      </div>
-    </nav>
+{% block extra_head %}
+  <script src="{% static 'js/chat.js' %}" defer></script>
+{% endblock %}
 
-    <main class="page-shell">
-      <section class="hero-panel">
-        <p class="hero-eyebrow">PROMPTLAB</p>
-        <h1>Seu pedido entra cru. O sistema devolve um prompt tecnico pronto para outra IA executar.</h1>
-        <p class="hero-copy">
-          O fluxo agora deixa claro que a IA do PromptLab organiza contexto, papel, restricoes e formato de saida.
-          Ela nao entrega o codigo final do projeto: entrega o prompt para gerar esse codigo depois.
-        </p>
-      </section>
-
-      <section class="overview-strip" aria-label="Visao geral do chat">
-        <article class="overview-card">
-          <p class="overview-label">Modelo ativo</p>
-          <strong>{{ model_name }}</strong>
-          <span>Conduz o pedido para um formato mais claro, completo e acionavel.</span>
-        </article>
-
-        <article class="overview-card">
-          <p class="overview-label">Regra central</p>
-          <strong>Melhora o prompt</strong>
-          <span>Nao implementa projeto, nao escreve patch final e nao executa a tarefa pedida.</span>
-        </article>
-
-        <article class="overview-card">
-          <p class="overview-label">Saida esperada</p>
-          <strong>Diagnostico + prompt otimizado</strong>
-          <span>Com blocos mais legiveis, codigo copiavel e hierarquia visual mais forte.</span>
-        </article>
-      </section>
-
-      <section class="chat-stage">
-        <div class="alerts" id="clientAlerts">
-          {% if messages %}
-            {% for message in messages %}
-            <div class="alert {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
-        </div>
-
-        <section class="chat-card">
-          <header class="chat-card-header">
-            <div>
-              <p class="chat-kicker">Conversa guiada</p>
-              <h2>Monte o proximo prompt</h2>
-            </div>
-            <p class="chat-subtitle">
-              Envie o objetivo do usuario e acompanhe a resposta formatada, com copia rapida dos blocos mais importantes.
-            </p>
-          </header>
-
-          <div class="chat-window" id="chatWindow" aria-live="polite">
-            {% if chat_history %}
-              {% for item in chat_history %}
-              <div class="message-row {{ item.role }}" data-role="{{ item.role }}">
-                <div class="message-meta">
-                  <span class="message-avatar">
-                    {% if item.role == "user" %}VO{% else %}PL{% endif %}
-                  </span>
-                  <span class="message-author">
-                    {% if item.role == "user" %}Voce{% else %}PromptLab IA{% endif %}
-                  </span>
-                </div>
-
-                <div
-                  class="message-bubble {% if item.role == 'assistant' %}rich-response{% endif %}"
-                  {% if item.role == "assistant" %}data-raw-content="{{ item.content|escapejs }}"{% endif %}
-                >
-                  <div class="message-body">{{ item.content|render_chat_message }}</div>
-                  {% if item.role == "assistant" %}
-                  <button type="button" class="copy-message-button" data-action="copy-message">
-                    Copiar resposta
-                  </button>
-                  {% endif %}
-                </div>
-              </div>
-              {% endfor %}
-            {% else %}
-            <div class="empty-state" id="emptyState">
-              <div class="empty-badge">Prompt Architect</div>
-              <h2>Envie um pedido e veja o prompt ganhar forma</h2>
-              <p>
-                O chat mostra seu envio imediatamente, sinaliza quando a IA esta pensando e devolve a resposta com melhor leitura.
-              </p>
-              <div class="empty-suggestions">
-                <span>Quero um prompt para criar uma landing page em Django</span>
-                <span>Transforme este pedido em prompt para revisar codigo</span>
-                <span>Reescreva um pedido para gerar um app com API e testes</span>
-              </div>
-            </div>
-            {% endif %}
+{% block content %}
+  <section class="chat-workspace">
+    <aside class="chat-sidebar">
+      <div class="sidebar-panel">
+        <div class="sidebar-head">
+          <div>
+            <p class="sidebar-kicker">Workspace</p>
+            <h1>Seus chats</h1>
           </div>
 
-          <form
-            method="post"
-            action="{% url 'chatbot:home' %}"
-            class="chat-form-wrapper"
-            id="chatForm"
-            data-chat-endpoint="{% url 'chatbot:message_api' %}"
-          >
+          <form method="post" action="{% url 'chatbot:chat_create' %}">
             {% csrf_token %}
-
-            <label class="sr-only" for="chatInput">{{ form.message.label }}</label>
-            <textarea
-              name="{{ form.message.html_name }}"
-              id="chatInput"
-              class="chat-input"
-              placeholder="Descreva o pedido que a outra IA devera transformar em codigo..."
-              rows="3"
-              autofocus
-            >{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
-
-            {% if form.message.errors %}
-            <div class="field-errors">{{ form.message.errors }}</div>
-            {% endif %}
-
-            <div class="form-footer">
-              <div class="form-status">
-                <span class="form-hint">Ctrl+Enter envia. Enter cria nova linha.</span>
-                <span class="send-status" id="sendStatus">Pronto para organizar o proximo prompt.</span>
-              </div>
-
-              <button type="submit" class="submit-button" id="submitButton">
-                <span class="submit-label">Enviar pedido</span>
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M22 2L11 13" />
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-                </svg>
-              </button>
-            </div>
+            <button type="submit" class="icon-button" title="Criar novo chat">+</button>
           </form>
-        </section>
-      </section>
-    </main>
-  </body>
-</html>
+        </div>
+
+        <p class="sidebar-copy">
+          Crie, troque e exclua conversas sem perder o historico armazenado nesta sessao.
+        </p>
+
+        <nav class="chat-list" aria-label="Lista de chats">
+          {% for chat in chat_list %}
+          <div class="chat-list-item {% if chat.id == active_chat.id %}is-active{% endif %}">
+            <a
+              href="{% url 'chatbot:chat_detail' chat.id %}"
+              class="chat-list-link"
+              data-chat-link="{{ chat.id }}"
+            >
+              <span class="chat-list-title" data-chat-title="{{ chat.id }}">{{ chat.title }}</span>
+              <span class="chat-list-meta" data-chat-count="{{ chat.id }}">{{ chat.message_count }} mensagens</span>
+            </a>
+
+            <form
+              method="post"
+              action="{% url 'chatbot:chat_delete' chat.id %}"
+              data-chat-delete
+            >
+              {% csrf_token %}
+              <button type="submit" class="chat-delete-button" title="Excluir chat">
+                x
+              </button>
+            </form>
+          </div>
+          {% endfor %}
+        </nav>
+      </div>
+    </aside>
+
+    <section class="chat-panel">
+      <header class="chat-panel-header">
+        <div>
+          <p class="chat-panel-kicker">Chat ativo</p>
+          <h2 id="activeChatTitle">{{ active_chat.title }}</h2>
+        </div>
+
+        <div class="chat-panel-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          <span>{{ model_name }}</span>
+        </div>
+      </header>
+
+      <div class="alerts" id="clientAlerts">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="chat-window" id="chatWindow" aria-live="polite">
+        {% if chat_history %}
+          {% for item in chat_history %}
+          <div class="message-row {{ item.role }}" data-role="{{ item.role }}">
+            <div class="message-meta">
+              <span class="message-avatar">
+                {% if item.role == "user" %}VO{% else %}PL{% endif %}
+              </span>
+              <span class="message-author">
+                {% if item.role == "user" %}Voce{% else %}PromptLab IA{% endif %}
+              </span>
+            </div>
+
+            <div
+              class="message-bubble {% if item.role == 'assistant' %}rich-response{% endif %}"
+              {% if item.role == "assistant" %}data-raw-content="{{ item.content|escapejs }}"{% endif %}
+            >
+              <div class="message-body">{{ item.content|render_chat_message }}</div>
+              {% if item.role == "assistant" %}
+              <button type="button" class="copy-message-button" data-action="copy-message">
+                Copiar resposta
+              </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+        <div class="empty-state" id="emptyState">
+          <div class="empty-badge">Novo chat</div>
+          <h3>Comece uma conversa nova</h3>
+          <p>
+            Envie um objetivo cru para a IA estruturar um prompt melhor, e depois troque para outro chat quando quiser.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+      <form
+        method="post"
+        action="{% url 'chatbot:chat_detail' active_chat.id %}"
+        class="chat-form-wrapper"
+        id="chatForm"
+        data-chat-endpoint="{% url 'chatbot:message_api' active_chat.id %}"
+        data-chat-id="{{ active_chat.id }}"
+      >
+        {% csrf_token %}
+
+        <label class="sr-only" for="chatInput">{{ form.message.label }}</label>
+        <textarea
+          name="{{ form.message.html_name }}"
+          id="chatInput"
+          class="chat-input"
+          placeholder="Descreva o pedido que a outra IA devera executar..."
+          rows="3"
+          autofocus
+        >{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
+
+        {% if form.message.errors %}
+        <div class="field-errors">{{ form.message.errors }}</div>
+        {% endif %}
+
+        <div class="form-footer">
+          <div class="form-status">
+            <span class="form-hint">Ctrl+Enter envia. Enter cria nova linha.</span>
+            <span class="send-status" id="sendStatus">Pronto para trabalhar neste chat.</span>
+          </div>
+
+          <button type="submit" class="submit-button" id="submitButton">
+            <span class="submit-label">Enviar pedido</span>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M22 2L11 13" />
+              <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </section>
+  </section>
+{% endblock %}

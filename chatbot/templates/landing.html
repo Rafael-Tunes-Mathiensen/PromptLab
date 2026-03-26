@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}PromptLab | Apresentacao{% endblock %}
+
+{% block content %}
+  <section class="landing-hero">
+    <div class="landing-hero-copy">
+      <p class="eyebrow">PROMPT ARCHITECT</p>
+      <h1>Um laboratorio para transformar pedidos vagos em prompts fortes, claros e prontos para outra IA executar.</h1>
+      <p class="hero-description">
+        O PromptLab pega uma ideia crua, organiza contexto, papel da IA, restricoes e formato de entrega, e devolve um prompt otimizado.
+        Ele nao escreve o projeto final: prepara o melhor pedido para gerar esse projeto depois.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button-primary" href="{{ active_chat_url }}">Abrir workspace</a>
+        <a class="button-secondary" href="{{ github_url }}" target="_blank" rel="noreferrer">
+          Ver meu GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="landing-hero-card">
+      <p class="hero-card-label">O que ele faz</p>
+      <ul class="hero-card-list">
+        <li>Diagnostica lacunas do pedido original.</li>
+        <li>Reescreve o prompt com estrutura profissional.</li>
+        <li>Entrega blocos prontos para copiar.</li>
+        <li>Mantem o foco em gerar prompts, nao codigo final.</li>
+      </ul>
+      <div class="hero-card-footer">
+        <span>{{ model_name }}</span>
+        <span>{{ chat_count }} chats armazenados</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="landing-grid">
+    <article class="feature-panel">
+      <p class="panel-kicker">Para que serve</p>
+      <h2>Dar mais qualidade para qualquer pedido antes de mandar para uma IA que vai executar.</h2>
+      <p>
+        Isso ajuda quando voce quer programar, revisar codigo, escrever textos, criar planos ou montar tarefas mais tecnicas sem depender de um pedido improvisado.
+      </p>
+    </article>
+
+    <article class="feature-panel">
+      <p class="panel-kicker">Como funciona</p>
+      <h2>Pedido cru entra, analise acontece, prompt otimizado sai.</h2>
+      <p>
+        O app aponta o que falta, aplica tecnicas de prompt engineering e devolve uma versao mais precisa, com formato de resposta e criterios de qualidade bem definidos.
+      </p>
+    </article>
+
+    <article class="feature-panel author-panel">
+      <p class="panel-kicker">Quem fez</p>
+      <h2>{{ author_name }}</h2>
+      <p>
+        Projeto pessoal em Django focado em experiencia de chat, engenharia de prompts e organizacao de fluxos para IA.
+      </p>
+      <a class="button-primary" href="{{ github_url }}" target="_blank" rel="noreferrer">
+        Acessar GitHub
+      </a>
+    </article>
+  </section>
+{% endblock %}

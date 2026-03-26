@@ -15,6 +15,7 @@
       }
 
       this.bindEvents();
+      this.bindDeleteForms();
       this.autoResize();
       this.scrollToBottom(false);
     }
@@ -24,6 +25,16 @@
       this.input.addEventListener("keydown", (event) => this.handleKeydown(event));
       this.input.addEventListener("input", () => this.autoResize());
       this.chatWindow.addEventListener("click", (event) => this.handleChatClick(event));
+    }
+
+    bindDeleteForms() {
+      document.querySelectorAll("[data-chat-delete]").forEach((form) => {
+        form.addEventListener("submit", (event) => {
+          if (!window.confirm("Excluir este chat?")) {
+            event.preventDefault();
+          }
+        });
+      });
     }
 
     handleKeydown(event) {
@@ -93,6 +104,7 @@
 
         this.replaceMessageBody(optimisticUserRow, data.user.html, data.user.content, false);
         this.replacePendingRow(pendingAssistantRow, data.assistant.html, data.assistant.content);
+        this.updateActiveChatMeta(data.chat);
         this.setStatus("Resposta pronta. Voce pode copiar a mensagem inteira ou um bloco especifico.");
         this.scrollToBottom();
       } catch (error) {
@@ -239,6 +251,27 @@
     setStatus(text) {
       if (this.sendStatus) {
         this.sendStatus.textContent = text;
+      }
+    }
+
+    updateActiveChatMeta(chat) {
+      if (!chat) {
+        return;
+      }
+
+      const titleTarget = document.getElementById("activeChatTitle");
+      if (titleTarget) {
+        titleTarget.textContent = chat.title;
+      }
+
+      const listTitle = document.querySelector(`[data-chat-title="${chat.id}"]`);
+      if (listTitle) {
+        listTitle.textContent = chat.title;
+      }
+
+      const listCount = document.querySelector(`[data-chat-count="${chat.id}"]`);
+      if (listCount) {
+        listCount.textContent = `${chat.message_count} mensagens`;
       }
     }
 
