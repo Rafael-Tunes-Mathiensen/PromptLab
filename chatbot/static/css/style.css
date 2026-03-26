@@ -1,22 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
 :root {
-  --bg: #08090c;
-  --surface-0: #0d0f14;
-  --surface-1: #12151c;
-  --surface-2: #181c26;
-  --surface-3: #1e2330;
-  --accent: #00e5ff;
-  --accent-dim: rgba(0, 229, 255, 0.12);
-  --accent-glow: rgba(0, 229, 255, 0.35);
+  /* 🎨 NOVA PALETA */
+  --bg: #0b0b10;
+  --surface-0: #12121a;
+  --surface-1: #181824;
+  --surface-2: #1f1f2e;
+  --surface-3: #2a2a3d;
+  --accent: #8b5cf6; /* roxo principal */
+  --accent-strong: #6d28d9;
+  --accent-dim: rgba(139, 92, 246, 0.12);
+  --accent-glow: rgba(139, 92, 246, 0.35);
   --accent2: #7b61ff;
-  --text: #e8ecf4;
-  --text-muted: #6b7490;
-  --text-faint: #3a3f52;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-accent: rgba(0, 229, 255, 0.2);
-  --radius-card: 20px;
-  --radius-bubble: 18px;
+  --text: #f1f1f5;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(139, 92, 246, 0.25);
+  --radius-card: 18px;
+  --radius-bubble: 16px;
   --shadow-card: 0 0 0 1px var(--border), 0 32px 80px rgba(0, 0, 0, 0.6);
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', sans-serif;
