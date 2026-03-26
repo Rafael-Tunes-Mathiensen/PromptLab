@@ -1,0 +1,228 @@
+:root {
+  --bg: #0f0a18;
+  --panel: #171124;
+  --panel-strong: #221834;
+  --surface: #2b2240;
+  --accent: #7c4dff;
+  --accent-soft: #9c7bff;
+  --text: #f1eef9;
+  --muted: #b7b1c8;
+  --border: rgba(181, 170, 211, 0.18);
+  --danger: #5a2d3b;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(124, 77, 255, 0.24), transparent 30%),
+    linear-gradient(135deg, #0b0712 0%, #140d1f 50%, #1c1528 100%);
+}
+
+code {
+  font-family: Consolas, monospace;
+}
+
+.layout {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+}
+
+.hero-card,
+.chat-card {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: rgba(23, 17, 36, 0.92);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.hero-card {
+  padding: 32px;
+  position: sticky;
+  top: 24px;
+  height: fit-content;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--accent-soft);
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1;
+}
+
+.description {
+  margin: 18px 0 24px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.meta {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.2), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(156, 123, 255, 0.18);
+}
+
+.meta span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.chat-card {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.alerts {
+  display: grid;
+  gap: 10px;
+}
+
+.alert {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.alert.error {
+  background: rgba(90, 45, 59, 0.7);
+}
+
+.chat-window {
+  min-height: 520px;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding: 12px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(43, 34, 64, 0.5), rgba(20, 15, 30, 0.9));
+  border: 1px solid var(--border);
+  display: grid;
+  gap: 14px;
+}
+
+.message-bubble {
+  max-width: min(82%, 760px);
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+}
+
+.message-bubble p {
+  margin: 0;
+  line-height: 1.65;
+  color: #f5f1ff;
+}
+
+.message-bubble.user {
+  margin-left: auto;
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.28), rgba(124, 77, 255, 0.14));
+}
+
+.message-bubble.assistant {
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.message-role {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-soft);
+}
+
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty-state h2 {
+  color: var(--text);
+}
+
+.chat-form {
+  display: grid;
+  gap: 12px;
+}
+
+.chat-input {
+  width: 100%;
+  resize: vertical;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: rgba(156, 123, 255, 0.75);
+  box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.16);
+}
+
+.field-errors {
+  color: #ffcad6;
+  font-size: 0.92rem;
+}
+
+.submit-button {
+  justify-self: end;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 22px;
+  background: linear-gradient(135deg, var(--accent), #5f35d6);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card {
+    position: static;
+  }
+
+  .chat-window {
+    min-height: 420px;
+    max-height: none;
+  }
+
+  .message-bubble {
+    max-width: 100%;
+  }
+}

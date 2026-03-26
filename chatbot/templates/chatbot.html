@@ -1,0 +1,65 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot IA</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Assistente com IA</p>
+          <h1>Chatbot Django com Nemotron</h1>
+          <p class="description">
+            Converse com a IA usando a chave configurada em <code>.env</code>
+            na variavel <code>AI_API_KEY</code>.
+          </p>
+          <div class="meta">
+            <span>Modelo</span>
+            <strong>{{ model_name }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="chat-card">
+        {% if messages %}
+          <div class="alerts">
+            {% for message in messages %}
+              <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="chat-window">
+          {% if chat_history %}
+            {% for item in chat_history %}
+              <article class="message-bubble {{ item.role }}">
+                <span class="message-role">
+                  {% if item.role == "user" %}Voce{% else %}IA{% endif %}
+                </span>
+                <p>{{ item.content|linebreaksbr }}</p>
+              </article>
+            {% endfor %}
+          {% else %}
+            <article class="empty-state">
+              <h2>Pronto para conversar</h2>
+              <p>Envie a primeira mensagem para iniciar o chat.</p>
+            </article>
+          {% endif %}
+        </div>
+
+        <form method="post" class="chat-form">
+          {% csrf_token %}
+          {{ form.message }}
+          {% if form.message.errors %}
+            <div class="field-errors">{{ form.message.errors }}</div>
+          {% endif %}
+          <button type="submit" class="submit-button">Enviar mensagem</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

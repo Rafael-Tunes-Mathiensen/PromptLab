@@ -1,0 +1,15 @@
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+local_settings.py
+.env
+.venv
+venv/
+ENV/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+.idea/
