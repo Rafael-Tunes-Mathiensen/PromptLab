@@ -4,62 +4,162 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chatbot IA</title>
+    <title>PromptLab — Chatbot IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
+    <!-- ─── NAVBAR ─────────────────────────────────────── -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">
+          <div class="brand-logo">
+            <!-- Lightning / prompt icon -->
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L4.5 13.5H11L10 22L20.5 10.5H14L13 2Z" />
+            </svg>
+          </div>
+          <span class="brand-name">Prompt<span>Lab</span></span>
+        </a>
+        <span class="navbar-badge">IA · Beta</span>
+      </div>
+    </nav>
+
+    <!-- ─── LAYOUT ─────────────────────────────────────── -->
     <main class="layout">
-      <section class="hero-card">
-        <div class="hero-copy">
-          <p class="eyebrow">Assistente com IA</p>
-          <h1>Chatbot Django com Nemotron</h1>
-          <p class="description">
-            Converse com a IA usando a chave configurada em <code>.env</code>
-            na variavel <code>AI_API_KEY</code>.
-          </p>
-          <div class="meta">
-            <span>Modelo</span>
-            <strong>{{ model_name }}</strong>
+      <!-- ─── SIDEBAR ──────────────────────────────────── -->
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <p class="sidebar-label">Modelo Ativo</p>
+          <div class="model-chip">
+            <span class="model-dot"></span>
+            <span class="model-name">{{ model_name }}</span>
           </div>
         </div>
-      </section>
 
+        <div class="sidebar-card">
+          <p class="sidebar-label">Dica</p>
+          <p class="sidebar-tip">
+            Seja específico nos seus prompts para obter respostas mais precisas
+            e úteis da IA.
+          </p>
+        </div>
+      </aside>
+
+      <!-- ─── CHAT CARD ─────────────────────────────────── -->
       <section class="chat-card">
+        <!-- Alerts (Django messages) -->
         {% if messages %}
-          <div class="alerts">
-            {% for message in messages %}
-              <div class="alert {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-          </div>
+        <div class="alerts">
+          {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
         {% endif %}
 
-        <div class="chat-window">
-          {% if chat_history %}
-            {% for item in chat_history %}
-              <article class="message-bubble {{ item.role }}">
-                <span class="message-role">
-                  {% if item.role == "user" %}Voce{% else %}IA{% endif %}
-                </span>
-                <p>{{ item.content|linebreaksbr }}</p>
-              </article>
-            {% endfor %}
-          {% else %}
-            <article class="empty-state">
-              <h2>Pronto para conversar</h2>
-              <p>Envie a primeira mensagem para iniciar o chat.</p>
-            </article>
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+          {% if chat_history %} {% for item in chat_history %}
+          <div class="message-row {{ item.role }}">
+            <div class="message-meta">
+              <span class="message-avatar">
+                {% if item.role == "user" %}👤{% else %}⚡{% endif %}
+              </span>
+              {% if item.role == "user" %}Você{% else %}PromptLab IA{% endif %}
+            </div>
+            <div class="message-bubble">
+              {{ item.content|linebreaksbr }} {% if item.role == "assistant" %}
+              <button
+                class="copy-btn"
+                title="Copiar resposta"
+                data-content="{{ item.content|escapejs }}"
+                onclick="copyMessage(this)"
+              >
+                <!-- Copy icon -->
+                <svg viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
+              </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">⚡</div>
+            <h2>Pronto para conversar</h2>
+            <p>Envie a primeira mensagem para iniciar a conversa com a IA.</p>
+          </div>
           {% endif %}
         </div>
 
-        <form method="post" class="chat-form">
+        <!-- Chat Form -->
+        <form method="post" class="chat-form-wrapper" id="chatForm">
           {% csrf_token %}
-          {{ form.message }}
+          <textarea
+            name="{{ form.message.html_name }}"
+            id="chatInput"
+            class="chat-input"
+            placeholder="Digite sua mensagem…"
+            rows="3"
+            autofocus
+          >
+{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea
+          >
+
           {% if form.message.errors %}
-            <div class="field-errors">{{ form.message.errors }}</div>
+          <div class="field-errors">{{ form.message.errors }}</div>
           {% endif %}
-          <button type="submit" class="submit-button">Enviar mensagem</button>
+
+          <div class="form-footer">
+            <span class="form-hint"
+              >Enter para nova linha · Ctrl+Enter para enviar</span
+            >
+            <button type="submit" class="submit-button">
+              Enviar
+              <!-- Send arrow icon -->
+              <svg viewBox="0 0 24 24">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </div>
         </form>
       </section>
     </main>
+
+    <script>
+      // ─── Auto-scroll to bottom ──────────────────────────
+      const chatWindow = document.getElementById("chatWindow");
+      if (chatWindow) {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      // ─── Ctrl+Enter to submit ───────────────────────────
+      document
+        .getElementById("chatInput")
+        ?.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            document.getElementById("chatForm").submit();
+          }
+        });
+
+      // ─── Copy message ───────────────────────────────────
+      function copyMessage(btn) {
+        const text = btn.getAttribute("data-content");
+        navigator.clipboard.writeText(text).then(() => {
+          btn.classList.add("copied");
+          btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.innerHTML = `<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+          }, 2000);
+        });
+      }
+    </script>
   </body>
 </html>

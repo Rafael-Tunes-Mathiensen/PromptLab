@@ -1,2 +1,7 @@
 # PromptLab
-PromptLab é um chatbot de IA feito em Django que aprimora prompts, tornando-os mais claros, específicos e eficientes. A ferramenta ajuda usuários a obter respostas melhores em modelos de IA por meio de otimização automática e interação simples em tempo real.
+
+PromptLab é um projeto desenvolvido em Django que tem como objetivo aprimorar prompts de Inteligência Artificial de forma simples e eficiente. A aplicação funciona como um chatbot inteligente, capaz de analisar, melhorar e reestruturar prompts, tornando-os mais claros, específicos e eficazes para gerar melhores respostas em modelos de IA.
+
+A plataforma foi pensada para desenvolvedores, criadores de conteúdo e entusiastas de IA que desejam extrair resultados mais precisos e profissionais a partir de seus comandos. Com uma interface intuitiva e interação em tempo real, o PromptLab transforma ideias básicas em prompts otimizados, elevando a qualidade das respostas geradas.
+
+Este projeto marca o início da minha jornada com Django, explorando conceitos como backend web, integração com APIs de IA e construção de aplicações dinâmicas orientadas ao usuário.
